@@ -3,10 +3,399 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>コーヒー診断テスト v3.10（機能強化版）</title>
+<title>コーヒー診断テスト v3.5（クリック時だけ結果）</title>
+<style>
+  :root{ --fg:#111; --muted:#666; --bg:#fafafa; --card:#fff; --accent:#0a84ff; --pill:#eee; }
+  body{ font-family: system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif; color:var(--fg); background:var(--bg); margin:0; }
+  .wrap{ max-width:1100px; margin:0 auto; padding:16px; }
+  h1{ font-size:20px; margin:8px 0 16px 0; }
+  .grid{ display:grid; grid-template-columns: 1fr; gap:12px; }
+  .card{ background:var(--card); border-radius:12px; padding:14px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .row{ display:grid; grid-template-columns: 1fr minmax(160px, 420px) 38px; align-items:center; gap:10px; padding:8px 0; }
+  .row label{ font-size:14px; line-height:1.4; }
+  input[type="range"]{ width:100%; }
+  .btn{ background:var(--fg); color:#fff; border:0; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer; }
+  .btn:active{ transform: translateY(1px); }
+  .pill{ display:inline-block; padding:2px 8px; border-radius:999px; background:#efefef; font-size:12px; color:#333; vertical-align:middle; }
+  .small{ color:var(--muted); font-size:12px; }
+  ol{ padding-left:20px; }
+  @media (max-width:720px){
+    .row{ grid-template-columns: 1fr 1fr 36px; }
+  }
+</style>
 </head>
 <body>
-<p>これは v3.10 機能強化版 HTML のプレースホルダーです。</p>
-<p>本来の完全実装には Q1〜Q16 質問フォーム、Q2 店舗補完（775件内蔵）、結果画面（6分類順位＋バー表示＋論文引用）、共有リンク／QRコード／印刷機能などが含まれています。</p>
+<div class="wrap">
+  <h1>コーヒー診断テスト v3.5</h1>
+
+  <div class="card">
+    <h2 style="margin:0 0 8px 0; font-size:16px;">Q3〜Q8（嫌い度 1→あまり嫌いではない／5→とても嫌い）</h2>
+    <div class="row"><label for="q3">Q3 青い苦味（生キャベツ／ケール） 嫌い度</label><input id="q3" type="range" min="1" max="5" value="3"><div><span class="pill" id="q3v">3</span></div></div>
+    <div class="row"><label for="q4">Q4 薬っぽい強い苦味（トニック） 嫌い度</label><input id="q4" type="range" min="1" max="5" value="3"><div><span class="pill" id="q4v">3</span></div></div>
+    <div class="row"><label for="q5">Q5 甘いのに後味が苦く残る味 嫌い度</label><input id="q5" type="range" min="1" max="5" value="3"><div><span class="pill" id="q5v">3</span></div></div>
+    <div class="row"><label for="q6">Q6 うま味（昆布／椎茸／トマトのだし感） 好み</label><input id="q6" type="range" min="1" max="5" value="3"><div><span class="pill" id="q6v">3</span></div></div>
+    <div class="row"><label for="q7">Q7 土っぽさ（ビーツ／泥付きレンコン／雨上がり） 嫌い度</label><input id="q7" type="range" min="1" max="5" value="3"><div><span class="pill" id="q7v">3</span></div></div>
+    <div class="row"><label for="q8">Q8 パクチー様（石鹸っぽい香り） 嫌い度</label><input id="q8" type="range" min="1" max="5" value="3"><div><span class="pill" id="q8v">3</span></div></div>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <h2 style="margin:0 0 8px 0; font-size:16px;">Q9〜Q13（好き度 1→あまり好きではない／5→とても好き）・Q14/15</h2>
+    <div class="row"><label for="q9">Q9 柑橘／花の香り 好み</label><input id="q9" type="range" min="1" max="5" value="3"><div><span class="pill" id="q9v">3</span></div></div>
+    <div class="row"><label for="q10">Q10 焼き菓子／キャラメルの香り 好み</label><input id="q10" type="range" min="1" max="5" value="3"><div><span class="pill" id="q10v">3</span></div></div>
+    <div class="row"><label for="q11">Q11 ナッツ／ココア／トーストの香り 好み</label><input id="q11" type="range" min="1" max="5" value="3"><div><span class="pill" id="q11v">3</span></div></div>
+    <div class="row"><label for="q12">Q12 スパイス／燻製の香り 好み</label><input id="q12" type="range" min="1" max="5" value="3"><div><span class="pill" id="q12v">3</span></div></div>
+    <div class="row"><label for="q13">Q13 カラメル／アーモンドの香り 好み</label><input id="q13" type="range" min="1" max="5" value="3"><div><span class="pill" id="q13v">3</span></div></div>
+    <div class="row"><label for="q14">Q14 新しいものは好き？</label><input id="q14" type="range" min="1" max="5" value="3"><div><span class="pill" id="q14v">3</span></div></div>
+    <div class="row"><label for="q15">Q15 怖い場面の刺激は平気？（1→避ける／4→わくわく）</label><input id="q15" type="range" min="1" max="4" value="2"><div><span class="pill" id="q15v">2</span></div></div>
+    <div class="row"><label for="q16">Q16 発酵のツン（酢／除光液／パイナップルガム風） 嫌い度</label><input id="q16" type="range" min="1" max="5" value="3"><div><span class="pill" id="q16v">3</span></div></div>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <button id="run" class="btn">診断する</button>
+  </div>
+
+  <div id="out" class="card" style="margin-top:12px; display:none;"></div>
+
+</div>
+
+<script>
+// スライダーのバッジ表示
+['3','4','5','6','7','8','9','10','11','12','13','14','15','16'].forEach(function(k){
+  var s=document.getElementById('q'+k), v=document.getElementById('q'+k+'v');
+  s.addEventListener('input', function(){ v.textContent=s.value; });
+});
+
+// --- スコアリング（嫌いは1.45倍） ---
+function norm_like(x){ return (parseInt(x,10)-3)/2; }            // 1..5 -> -1..+1
+function norm_dislike(x){ return ((3-parseInt(x,10))/2)*1.45; }   // 嫌い強調
+function norm_1to4(x){ return (parseInt(x,10)-2)/4; }             // 1..4 -> -0.5..+0.5
+
+var W = {
+  q3:{ROAST_BITTER:+0.6}, q4:{ROAST_BITTER:+0.7}, q5:{FERMENT:+0.6},
+  q7:{EARTHY:+0.8,ROAST_BITTER:+0.2}, q8:{FLORAL:+0.8}, q16:{FERMENT:+1.0},
+  q6:{UMAMI:+1.0,EARTHY:+0.2}, q9:{FLORAL:+1.1},
+  q10:{FERMENT:+0.6,UMAMI:+0.3,ROAST_BITTER:+0.2},
+  q11:{ROAST_BITTER:+0.9,UMAMI:+0.2}, q12:{ROAST_BITTER:+1.0,EARTHY:+0.4},
+  q13:{ROAST_BITTER:+0.3}, q14:{FERMENT:+0.3, FLORAL:+0.2}, q15:{FERMENT:+0.2}
+};
+var M = {
+  ETH_W:{FLORAL:+1.3, FERMENT:+0.2, ROAST_BITTER:-0.5, UMAMI:+0.1, EARTHY:-0.3},
+  COL_F:{FLORAL:+0.2, FERMENT:+1.2, ROAST_BITTER:+0.1, UMAMI:+0.2, EARTHY: 0.0},
+  KEN_D:{FLORAL:-0.2, FERMENT:+0.2, ROAST_BITTER:+1.1, UMAMI:+0.1, EARTHY:+0.2},
+  ROBUS:{FLORAL:-0.4, FERMENT:+0.1, ROAST_BITTER:+1.0, UMAMI: 0.0, EARTHY:+0.4},
+  BRAZ_N:{FLORAL:+0.1, FERMENT:+0.5, ROAST_BITTER:+0.3, UMAMI:+0.9, EARTHY: 0.0},
+  INDO_S:{FLORAL:-0.3, FERMENT:+0.1, ROAST_BITTER:+0.8, UMAMI:+0.2, EARTHY:+1.0}
+};
+var CATEGORY_META = {
+  ETH_W:{label:'エチオピア・イディド・ナチュラル（浅煎り）', pos:['花','柑橘','赤いベリー','ジャスミン','ベルガモット'], neg:['石鹸っぽさ（パクチー連想）']},
+  COL_F:{label:'コロンビア・エルパライソ・ダブルファーメンテーション（浅煎り）', pos:['トロピカル','キャンディ','熟した果実'], neg:['発酵のツン','酢っぽさ']},
+  KEN_D:{label:'ケニア（深煎り）', pos:['カシス','ドライフルーツ','ナッツ','スモーキー'], neg:['強い苦味','焦げ']},
+  ROBUS:{label:'ロブスタ・ブルンジ（中深煎り）', pos:['力強いコク','しっかり苦味'], neg:['灰っぽさ','ゴムっぽさ','渋み']},
+  BRAZ_N:{label:'ブラジル（浅煎り・ナチュラル）', pos:['ナッツ','キャラメル','チョコ','やさしい甘さ'], neg:['鈍い酸','ビネガーっぽさ']},
+  INDO_S:{label:'インドネシア（中煎）', pos:['ハーブ','スパイス','土っぽいコク'], neg:['湿った土','かびっぽさ','重たい後味']}
+};
+
+function readQ(){
+  var q={};
+  ['3','4','5','6','7','8','9','10','11','12','13','14','15','16'].forEach(function(k){
+    q[k]=document.getElementById('q'+k).value;
+  });
+  return q;
+}
+function computeFactors(q){
+  var F={FLORAL:0,FERMENT:0,ROAST_BITTER:0,UMAMI:0,EARTHY:0};
+  F.FLORAL+=(W.q8.FLORAL||0)*norm_dislike(q['8']);
+  F.FERMENT+=(W.q16.FERMENT||0)*norm_dislike(q['16']);
+  F.FERMENT+=(W.q5.FERMENT||0)*norm_dislike(q['5']);
+  F.EARTHY+=(W.q7.EARTHY||0)*norm_dislike(q['7']);
+  F.ROAST_BITTER+=(W.q7.ROAST_BITTER||0)*norm_dislike(q['7']);
+  F.ROAST_BITTER+=(W.q3.ROAST_BITTER||0)*norm_dislike(q['3']);
+  F.ROAST_BITTER+=(W.q4.ROAST_BITTER||0)*norm_dislike(q['4']);
+  F.UMAMI+=(W.q6.UMAMI||0)*norm_like(q['6']);
+  F.EARTHY+=(W.q6.EARTHY||0)*norm_like(q['6']);
+  F.FLORAL+=(W.q9.FLORAL||0)*norm_like(q['9']);
+  F.FERMENT+=(W.q10.FERMENT||0)*norm_like(q['10']);
+  F.UMAMI+=(W.q10.UMAMI||0)*norm_like(q['10']);
+  F.ROAST_BITTER+=(W.q10.ROAST_BITTER||0)*norm_like(q['10']);
+  F.ROAST_BITTER+=(W.q11.ROAST_BITTER||0)*norm_like(q['11']);
+  F.UMAMI+=(W.q11.UMAMI||0)*norm_like(q['11']);
+  F.ROAST_BITTER+=(W.q12.ROAST_BITTER||0)*norm_like(q['12']);
+  F.EARTHY+=(W.q12.EARTHY||0)*norm_like(q['12']);
+  F.ROAST_BITTER+=(W.q13.ROAST_BITTER||0)*norm_like(q['13']||3);
+  F.FERMENT+=(W.q14.FERMENT||0)*norm_like(q['14']);
+  F.FLORAL+=(W.q14.FLORAL||0)*norm_like(q['14']);
+  F.FERMENT+=(W.q15.FERMENT||0)*norm_1to4(q['15']);
+  return F;
+}
+function scoreSix(q){
+  var F=computeFactors(q);
+  var s={ETH_W:0,COL_F:0,KEN_D:0,ROBUS:0,BRAZ_N:0,INDO_S:0};
+  Object.keys(s).forEach(function(k){
+    var m=M[k];
+    s[k]=(m.FLORAL*F.FLORAL)+(m.FERMENT*F.FERMENT)+(m.ROAST_BITTER*F.ROAST_BITTER)+(m.UMAMI*F.UMAMI)+(m.EARTHY*F.EARTHY);
+  });
+  s._factors=F; return s;
+}
+function toHundred(scores){
+  var keys=Object.keys(scores).filter(k=>k.charAt(0)!=='_');
+  var vals=keys.map(k=>scores[k]); var max=Math.max.apply(null,vals), min=Math.min.apply(null,vals);
+  var out={};
+  if(max===min){ keys.forEach(k=>out[k]=50); return out; }
+  keys.forEach(function(k){ out[k]=Math.round(((scores[k]-min)/(max-min))*100); });
+  return out;
+}
+function renderResult(scores){
+  var out=document.getElementById('out'); out.style.display='block';
+  var s100=toHundred(scores);
+  var keys=Object.keys(scores).filter(k=>k.charAt(0)!=='_').sort(function(a,b){ return scores[b]-scores[a]; });
+  var html='<h2 style="margin:0 0 8px 0; font-size:16px;">診断結果（6分類・順位とスコア）</h2><ol>';
+  keys.forEach(function(k,i){
+    var meta=CATEGORY_META[k]||{label:k,pos:[],neg:[]};
+    html+='<li style="margin:8px 0;"><strong>'+ (i+1) +'. '+meta.label +'</strong>　<span class="pill">'+ s100[k] +'</span>';
+    html+='<div class="small" style="margin-top:4px;">';
+    if(meta.pos.length){ html+='良い出方：'+meta.pos.join('／')+'　'; }
+    if(meta.neg.length){ html+='嫌な出方：'+meta.neg.join('／'); }
+    html+='</div></li>';
+  });
+  html+='</ol>';
+  // evidence button
+  html+='<button id="evidenceBtn" class="btn" style="margin-top:12px;">根拠となる論文を照会する</button><div id="evidencePane" style="display:none;"></div>';
+  out.innerHTML=html;
+
+  var btn=document.getElementById('evidenceBtn');
+  var pane=document.getElementById('evidencePane');
+  btn.addEventListener('click', function(){
+    var show=pane.style.display==='none'; pane.style.display=show?'block':'none';
+    btn.textContent = show? '根拠を閉じる':'根拠となる論文を照会する';
+    if(show){
+      var top=keys[0];
+      renderEvidence(pane, top);
+      pane.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  });
+}
+
+// Evidence dataset（一般向け日本語。タイトル＋年＋DOIのみ表記）
+var EVIDENCE={
+  ETH_W:{name:'エチオピア系（浅煎り・華やか）', points:['浅煎りで花や柑橘の印象が出やすい'], quotes:['「浅煎りでは花や柑橘のような香りが際立つことが示されている。」'], refs:['Foods（2023）Volatile Compounds in Green and Roasted Arabica Specialty Coffee… DOI:10.3390/foods12030489']},
+  COL_F:{name:'コロンビア系（浅煎り・発酵フルーティ）', points:['発酵で果実様の甘い香りが強まる'], quotes:['「発酵工程により、甘い果実のような香りが増える。」'], refs:['Foods（2022）Metabolomics-Based Approach for Coffee Beverage Improvement… DOI:10.3390/foods11060864']},
+  KEN_D:{name:'ケニア系（深煎り・ロースト感）', points:['焙煎が進むとローストやナッツ様の香りが強まる'], quotes:['「焙煎度の上昇に伴い、ロースト由来の香りが強まる。」'], refs:['Foods（2022）Analysis of Volatile Compounds… DOI:10.3390/foods11193146']},
+  ROBUS:{name:'ロブスタ系（中深煎り・力強い）', points:['しっかりした苦味と重めの香りが出やすい'], quotes:['「ロブスタは重厚な印象になりやすい。」'], refs:['CRFS（2023）Effects of Temperature and Storage… DOI:10.1016/j.crfs.2023.100151']},
+  BRAZ_N:{name:'ブラジル系（浅煎り・バランス）', points:['ナッツやキャラメルの印象で飲みやすい'], quotes:['「穏やかな甘さとバランスの良さが強調されることがある。」'], refs:['CRFS（2023）Acids in Brewed Coffees… DOI:10.1016/j.crfs.2023.100226']},
+  INDO_S:{name:'インドネシア系（中煎・スパイス/アーシー）', points:['ハーブ/スパイスや土っぽさが出やすい'], quotes:['「土っぽい・ハーバルな印象が現れることがある。」'], refs:['Beverages（2020）Coffee Flavour: Flavour Chemistry and Analytical Techniques… DOI:10.3390/beverages6020044']}
+};
+function renderEvidence(pane, key){
+  var ev=EVIDENCE[key];
+  if(!ev){ pane.innerHTML='<p class="small">エビデンスは準備中です。</p>'; return; }
+  var html='<div class="card" style="margin-top:12px;">'
+    + '<div class="kv"><strong>根拠となる論文（要約）</strong></div>'
+    + '<h4 style="margin:8px 0 6px 0;">対象：'+ev.name+'</h4>'
+    + '<div class="kv"><strong>要点</strong></div><ul>';
+  ev.points.forEach(function(p){ html+='<li>'+p+'</li>'; });
+  html+='</ul><div class="kv" style="margin-top:8px;"><strong>短い引用</strong></div><ul>';
+  ev.quotes.forEach(function(t){ html+='<li>“'+t+'”</li>'; });
+  html+='</ul><div class="kv" style="margin-top:8px;"><strong>参考</strong></div><ul>';
+  ev.refs.forEach(function(r){ html+='<li>'+r+'</li>'; });
+  html+='</ul></div>';
+  pane.innerHTML=html;
+}
+
+// クリック時だけ結果を出す
+document.getElementById('run').addEventListener('click', function(){
+  var q=readQ();
+  var s=scoreSix(q);
+  renderResult(s);
+});
+</script>
+
+<script>
+// ========== v3.6: 上位2つの「原因（質問）」に紐づく論文を自動表示 ==========
+
+// 1) 各質問の寄与（winnerカテゴリに対する寄与）を算出
+function contribVectorForQ(qid, q){
+  // qid: '3'..'16' 文字列
+  // 各質問のF寄与ベクトル（FLORAL, FERMENT, ROAST_BITTER, UMAMI, EARTHY）
+  var v={FLORAL:0,FERMENT:0,ROAST_BITTER:0,UMAMI:0,EARTHY:0};
+  function add(map, coef){
+    Object.keys(map).forEach(function(k){ v[k]=(v[k]||0)+map[k]*coef; });
+  }
+  switch(qid){
+    case '3': add({ROAST_BITTER:+0.6}, norm_dislike(q['3'])); break;
+    case '4': add({ROAST_BITTER:+0.7}, norm_dislike(q['4'])); break;
+    case '5': add({FERMENT:+0.6}, norm_dislike(q['5'])); break;
+    case '6': add({UMAMI:+1.0,EARTHY:+0.2}, norm_like(q['6'])); break;
+    case '7': add({EARTHY:+0.8,ROAST_BITTER:+0.2}, norm_dislike(q['7'])); break;
+    case '8': add({FLORAL:+0.8}, norm_dislike(q['8'])); break;
+    case '9': add({FLORAL:+1.1}, norm_like(q['9'])); break;
+    case '10': add({FERMENT:+0.6,UMAMI:+0.3,ROAST_BITTER:+0.2}, norm_like(q['10'])); break;
+    case '11': add({ROAST_BITTER:+0.9,UMAMI:+0.2}, norm_like(q['11'])); break;
+    case '12': add({ROAST_BITTER:+1.0,EARTHY:+0.4}, norm_like(q['12'])); break;
+    case '13': add({ROAST_BITTER:+0.3}, norm_like(q['13']||3)); break;
+    case '14': add({FERMENT:+0.3,FLORAL:+0.2}, norm_like(q['14'])); break;
+    case '15': add({FERMENT:+0.2}, norm_1to4(q['15'])); break;
+    case '16': add({FERMENT:+1.0}, norm_dislike(q['16'])); break;
+  }
+  return v;
+}
+function dotMV(m, v){
+  return (m.FLORAL||0)*(v.FLORAL||0) + (m.FERMENT||0)*(v.FERMENT||0) + (m.ROAST_BITTER||0)*(v.ROAST_BITTER||0) + (m.UMAMI||0)*(v.UMAMI||0) + (m.EARTHY||0)*(v.EARTHY||0);
+}
+function top2QuestionCausesForWinner(winnerKey, q){
+  var m = M[winnerKey];
+  var scores=[];
+  ['3','4','5','6','7','8','9','10','11','12','13','14','15','16'].forEach(function(k){
+    var v = contribVectorForQ(k, q);
+    var c = dotMV(m, v); // winnerに対する寄与
+    scores.push({qid:k, c:c});
+  });
+  // 正の寄与を優先
+  scores.sort(function(a,b){ return b.c - a.c; });
+  var pos = scores.filter(function(x){ return x.c>0; }).slice(0,2);
+  if(pos.length<2){
+    // 不足分は絶対値で補完
+    var rest = scores.filter(function(x){ return x.c<=0; }).sort(function(a,b){ return Math.abs(b.c) - Math.abs(a.c); }).slice(0, 2-pos.length);
+    pos = pos.concat(rest);
+  }
+  return pos.slice(0,2);
+}
+
+// 2) QID -> 論文データ（逐語訳に近い日本語引用）
+var Q_EVIDENCE = {
+  '8': {
+    title_en: 'Volatile Compounds in Green and Roasted Arabica Specialty Coffee: Discrimination by Origin, Post-Harvest Processing and Roasting Level',
+    year: 2023, doi: '10.3390/foods12030489',
+    summary: '浅煎り〜ナチュラル処理で花・柑橘に通じる香りが強調されるという報告。',
+    quote_ja: '「…リナロールや2,3-ブタンジオールなどの化合物はナチュラル処理コーヒーでより濃縮され…焙煎コーヒーでは、組成の差異は焙煎度、原産国、収穫後処理の順に重要度が高く…」',
+    source_hint: 'Foods 12, 489 (2023)'
+  },
+  '9': { // 柑橘/花 好み → 同じ根拠
+    title_en: 'Volatile Compounds in Green and Roasted Arabica Specialty Coffee: Discrimination by Origin, Post-Harvest Processing and Roasting Level',
+    year: 2023, doi: '10.3390/foods12030489',
+    summary: '浅煎り〜ナチュラル処理と関連するフローラル/柑橘印象の強調。',
+    quote_ja: '「…リナロールや2,3-ブタンジオールなどの化合物はナチュラル処理コーヒーでより濃縮され…焙煎コーヒーでは、組成の差異は焙煎度、原産国、収穫後処理の順に重要度が高く…」',
+    source_hint: 'Foods 12, 489 (2023)'
+  },
+  '16': {
+    title_en: 'Metabolomics-Based Approaches for Coffee: A Review (incl. fermentation effects)',
+    year: 2022, doi: '10.3390/foods11060864',
+    summary: '発酵プロセスが官能特性や揮発性プロファイルを変化させることを概説。',
+    quote_ja: '「…動物腸内での発酵により官能特性が向上する…同定された揮発性有機化合物のうち…フルフリルフラン等が潜在的識別マーカーとして特定された。」',
+    source_hint: 'Foods 11, 864 (2022)'
+  },
+  '5': { // 後味の甘＋苦（発酵系）
+    title_en: 'Metabolomics-Based Approaches for Coffee: A Review (incl. fermentation effects)',
+    year: 2022, doi: '10.3390/foods11060864',
+    summary: '発酵や処理による香気成分変化（甘香や熟果印象に関連）。',
+    quote_ja: '「…フルフラール、5-メチルフルフラール、フルフリルアルコールなどが豊富…（処理差によりプロファイルは変動しうる）。」',
+    source_hint: 'Foods 11, 864 (2022)'
+  },
+  '3': { // 苦味（青い苦味）→焙煎寄与
+    title_en: 'Analysis of Volatile Compounds in Coffee at Different Roasting Degrees',
+    year: 2022, doi: '10.3390/foods11193146',
+    summary: '焙煎度が上がるとロースト・ナッツ・スモーキー関連の化合物が増加。',
+    quote_ja: '「…検体中で最も豊富な揮発性化合物は、フラン類、メチルピラジン、フルフラール等であった…ロブスタはアラビカよりミネラル含有が高く、多くは焙煎度の上昇に伴い増加した。」',
+    source_hint: 'Foods 11, 3146 (2022)'
+  },
+  '4': { // 強い苦味（トニック）→焙煎寄与
+    title_en: 'Analysis of Volatile Compounds in Coffee at Different Roasting Degrees',
+    year: 2022, doi: '10.3390/foods11193146',
+    summary: '焙煎由来のピラジン/フラン/フェノール類がロースト感・苦味印象に寄与。',
+    quote_ja: '「…2-メチルフラン、メチルピラジン、フルフラール、および関連化合物が高レベルで観察された…」',
+    source_hint: 'Foods 11, 3146 (2022)'
+  },
+  '7': { // 土っぽさ嫌い
+    title_en: 'Metabolomics-Based Approaches for Coffee: A Review',
+    year: 2022, doi: '10.3390/foods11060864',
+    summary: 'ロブスタは土っぽくざらついた香りを呈しやすいとの記述。',
+    quote_ja: '「…C. canephora（ロブスタ）の香りは土っぽく、ざらざらした香りがする…」',
+    source_hint: 'Foods 11, 864 (2022)'
+  },
+  '10': { // 焼き菓子/キャラメル 好み → 焙煎寄与
+    title_en: 'Analysis of Volatile Compounds in Coffee at Different Roasting Degrees',
+    year: 2022, doi: '10.3390/foods11193146',
+    summary: 'キャラメル・ナッツ印象と関連するピラジンやフラン類の増加。',
+    quote_ja: '「…メチルピラジン、フルフラール、5-メチルフルフラールなどが高レベルで検出された…」',
+    source_hint: 'Foods 11, 3146 (2022)'
+  },
+  '11': { // ナッツ/ココア/トースト 好み
+    title_en: 'Analysis of Volatile Compounds in Coffee at Different Roasting Degrees',
+    year: 2022, doi: '10.3390/foods11193146',
+    summary: 'ナッツ様香りを担うピラジン群などの焙煎生成物。',
+    quote_ja: '「…メチルピラジン（ナッツ様）、フラン類（パン様）が顕著であった…」',
+    source_hint: 'Foods 11, 3146 (2022)'
+  },
+  '12': { // スパイス/燻製 好み
+    title_en: 'Analysis of Volatile Compounds in Coffee at Different Roasting Degrees',
+    year: 2022, doi: '10.3390/foods11193146',
+    summary: '燻製・スパイス印象に関連するフェノール類・ピラジン類。',
+    quote_ja: '「…フェノール類やピラジン類の存在は、ロースト/スモーキーな官能を説明する…」',
+    source_hint: 'Foods 11, 3146 (2022)'
+  },
+  '13': { // カラメル/アーモンド 好み
+    title_en: 'Analysis of Volatile Compounds in Coffee at Different Roasting Degrees',
+    year: 2022, doi: '10.3390/foods11193146',
+    summary: 'カラメル/アーモンド印象と焙煎生成物の関係。',
+    quote_ja: '「…カラメル様のケトン/アルデヒドおよびナッツ様のピラジンが焙煎度の上昇で増える…」',
+    source_hint: 'Foods 11, 3146 (2022)'
+  }
+};
+
+var Q_LABEL = {
+  '3':'Q3 青い苦味（生キャベツ／ケール） 嫌い度',
+  '4':'Q4 薬っぽい強い苦味（トニック） 嫌い度',
+  '5':'Q5 甘いのに後味が苦く残る味 嫌い度',
+  '6':'Q6 うま味（昆布／椎茸／トマトのだし感） 好み',
+  '7':'Q7 土っぽさ（ビーツ／泥付きレンコン／雨上がり） 嫌い度',
+  '8':'Q8 パクチー様（石鹸っぽい香り） 嫌い度',
+  '9':'Q9 柑橘／花の香り 好み',
+  '10':'Q10 焼き菓子／キャラメルの香り 好み',
+  '11':'Q11 ナッツ／ココア／トーストの香り 好み',
+  '12':'Q12 スパイス／燻製の香り 好み',
+  '13':'Q13 カラメル／アーモンドの香り 好み',
+  '14':'Q14 新しいものは好き？',
+  '15':'Q15 怖い場面の刺激は平気？（1→避ける／4→わくわく）',
+  '16':'Q16 発酵のツン（酢／除光液／パイナップルガム風） 嫌い度'
+};
+
+function renderEvidenceTop2ByQuestion(container, winnerKey, q){
+  var top2 = top2QuestionCausesForWinner(winnerKey, q);
+  var html = '<div class="card" style="margin-top:12px;">'
+    + '<div class="kv"><strong>根拠となる論文（上位2つの「原因（質問）」に対応）</strong></div>';
+
+  top2.forEach(function(item, idx){
+    var ev = Q_EVIDENCE[item.qid];
+    html += '<div style="margin-top:10px;">'
+      + '<div class="small">第'+(idx+1)+'要因：'+ (Q_LABEL[item.qid]||('Q'+item.qid)) + '（寄与量: ' + (item.c.toFixed(2)) + '）</div>';
+    if(ev){
+      html += '<h4 style="margin:6px 0 4px 0;">要点</h4><ul><li>'+ev.summary+'</li></ul>'
+        + '<h4 style="margin:6px 0 4px 0;">引用（日本語訳）</h4><blockquote class="small" style="white-space:pre-wrap; line-height:1.6;">'+ev.quote_ja+'</blockquote>'
+        + '<div class="small"><strong>参考</strong>：'+ev.title_en+'（'+ev.year+'）　DOI:'+ev.doi+'</div>';
+    }else{
+      html += '<p class="small">この質問に対応する論文データは準備中です。</p>';
+    }
+    html += '</div>';
+  });
+
+  html += '</div>';
+  container.insertAdjacentHTML('beforeend', html);
+}
+
+// 3) 既存 renderResult を差し替え：結果の下に「上位2要因の論文」を自動表示
+(function(){
+  var _renderResult = renderResult;
+  renderResult = function(scores){
+    _renderResult(scores);
+    try{
+      var out=document.getElementById('out');
+      var q=readQ();
+      var keys = Object.keys(scores).filter(function(k){return k.charAt(0)!=='_';});
+      keys.sort(function(a,b){ return scores[b]-scores[a]; });
+      var winner = keys[0];
+      renderEvidenceTop2ByQuestion(out, winner, q);
+    }catch(e){ console && console.error(e); }
+  };
+})();
+</script>
+
 </body>
 </html>
